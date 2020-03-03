@@ -1,11 +1,14 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
-public class GameBoard extends JPanel implements Runnable{
+public class GameBoard extends JPanel implements Runnable, KeyListener{
 	  
 	  private static final long serialVersionUID = 1L;
 	  public static final int WIDTH = 500, HEIGHT = 500;
@@ -19,14 +22,24 @@ public class GameBoard extends JPanel implements Runnable{
 	  private Smoko parts;
 	  private ArrayList<Smoko> smoko;
 	  
+	  private Food dinq;
+	  private ArrayList<Food> food;
+	  
+	  private Random r;
+	  
 	  private int xCor = 10, yCor = 10, size = 5;
 	  private int ticks = 0;
 	  
 	  public GameBoard() {
+		  setFocusable(true);
 		  
 		  setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		  addKeyListener(this);
 		  
 		  smoko = new ArrayList<Smoko>();
+		  food = new ArrayList<Food>();
+		  
+		  r = new Random();
 		  
 		  start();
 	  }
@@ -68,6 +81,23 @@ public class GameBoard extends JPanel implements Runnable{
 				smoko.remove(0);
 			}
 		}
+		  
+		  if (food.size() == 0) {
+			int xCorF = r.nextInt(49);
+			int yCorF = r.nextInt(49);
+			
+			dinq = new Food(xCorF, yCorF, 10);
+			food.add(dinq);
+		}
+		  
+		  for (int i = 0; i < food.size(); i++) {
+				if (xCor == food.get(i).getxCor() && yCor == food.get(i).getyCor()) {
+					size++;
+					food.remove(i);
+					i++;
+				}
+			}
+		  
 	  }
 	  
 	  public void paint(Graphics g) {
@@ -86,6 +116,10 @@ public class GameBoard extends JPanel implements Runnable{
 		  for (int i = 0; i < smoko.size(); i++) {
 			smoko.get(i).draw(g);
 		}
+		  
+		  for (int i = 0; i < food.size(); i++) {
+			  food.get(i).draw(g);
+		}
 	  }
 
 	@Override
@@ -94,6 +128,47 @@ public class GameBoard extends JPanel implements Runnable{
 			tick();
 			repaint();
 		}
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		int key = e.getKeyCode();
+		if (key == KeyEvent.VK_RIGHT && !left) {
+			right = true;
+			up = false;
+			down = false;
+		}
+		
+		if (key == KeyEvent.VK_LEFT && !right) {
+			left = true;
+			up = false;
+			down = false;
+		}
+		
+		if (key == KeyEvent.VK_UP && !down) {
+			up = true;
+			right = false;
+			left = false;
+		}
+		
+		if (key == KeyEvent.VK_DOWN && !up) {
+			down = true;
+			right = false;
+			left = false;
+		}
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 	  
