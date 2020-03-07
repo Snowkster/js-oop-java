@@ -27,8 +27,9 @@ public class GameBoard extends JPanel implements Runnable, KeyListener{
 	  
 	  private Random r;
 	  
-	  private int xCor = 10, yCor = 10, size = 5;
+	  private int xCor = 10, yCor = 10, size = 1;
 	  private int ticks = 0;
+	 
 	  
 	  public GameBoard() {
 		  setFocusable(true);
@@ -97,6 +98,28 @@ public class GameBoard extends JPanel implements Runnable, KeyListener{
 					i++;
 				}
 			}
+		  
+		  for (int i = 0; i < smoko.size(); i++) {
+			if (xCor == smoko.get(i).getxCor() && yCor == smoko.get(i).getyCor()) {
+				if (i != smoko.size() - 1) {
+					System.out.println("Game Over!");
+					stop();
+				}
+			}
+		}
+		  
+		  //left and right side
+		  if (xCor < 0) {
+			xCor = 49;
+		  }else if(xCor > 49) {
+			xCor = 0;
+		  }
+		  //up and down side
+		  if (yCor < 0) {
+		    yCor = 49;
+		}else if(yCor > 49) {
+			yCor = 0;
+		}
 		  
 	  }
 	  
